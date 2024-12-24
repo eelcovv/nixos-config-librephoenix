@@ -8,7 +8,7 @@
         system = "x86_64-linux"; # system arch
         hostname = "snowfire"; # hostname
         profile = "personal"; # select a profile defined from my profiles directory
-        timezone = "America/Chicago"; # select timezone
+        timezone = "Europe/Amsterdam"; # select timezone
         locale = "en_US.UTF-8"; # select locale
         bootMode = "uefi"; # uefi or bios
         bootMountPath = "/boot"; # mount path for efi boot partition; only used for uefi boot mode
