@@ -1,5 +1,5 @@
 {
-  description = "Flake of LibrePhoenix";
+  description = "Flake of Eelco";
 
   outputs = inputs@{ self, ... }:
     let
