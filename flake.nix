@@ -25,7 +25,7 @@
         dotfilesDir = "/home/eelco/.dotfiles"; # absolute path of the local repo
         theme = "ashes"; # selcted theme from my themes directory (./themes/)
 	# Selected window manager or desktop environment; must select one in both ./user/wm/ and ./system/wm/
-        # wm = "hyprland"; 
+        #wm = "hyprland"; 
         wm = "plasma"; 
 		# window manager type (hyprland or x11) translator
         wmType = if ((wm == "hyprland") || (wm == "plasma")) then "wayland" else "x11";
