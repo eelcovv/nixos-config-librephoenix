@@ -1,5 +1,6 @@
 #+title: NixOS Config
 #+author: Emmet
+#+modified by: Eelco
 
 [[https://gitlab.com/librephoenix/nixos-config][Main Repo Link (GitLab)]]
 

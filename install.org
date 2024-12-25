@@ -1,5 +1,6 @@
 #+title: Install
 #+author: Emmet
+#+modified by: Eelco
 
 These are just some simple install notes for myself (in-case I have to reinstall unexpectedly). You could also use these to try out my config in a VM.
 
