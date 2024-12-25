@@ -17,8 +17,7 @@
               #../../user/app/emacsng # Me experimenting with emacsng and a vanilla config
               ../../user/app/ranger/ranger.nix # My ranger file manager config
               ../../user/app/git/git.nix # My git config
-              ../../user/app/texlive/texlive.nix # My git config
-              ../../user/app/uv/uv.nix # My git config
+              ../../user/app/texlive/texlive.nix # My texlive config
               ../../user/app/keepass/keepass.nix # My password manager
               (./. + "../../../user/app/browser"+("/"+userSettings.browser)+".nix") # My default browser selected from flake
               ../../user/app/virtualization/virtualization.nix # Virtual machines
@@ -62,6 +61,7 @@
     element-desktop-wayland
 
     # latex
+    texlive
     texliveFull
     evince
 
