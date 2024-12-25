@@ -9,8 +9,6 @@ if [ $# -gt 0 ]
   else
     SCRIPT_DIR=~/.dotfiles
 fi
-nix-shell -p git --command "git clone https://gitlab.com/librephoenix/nixos-config $SCRIPT_DIR"
-
 # Generate hardware config for new system
 sudo nixos-generate-config --show-hardware-config > $SCRIPT_DIR/system/hardware-configuration.nix
 
@@ -24,9 +22,9 @@ else
 fi
 
 # Patch flake.nix with different username/name and remove email by default
-sed -i "0,/emmet/s//$(whoami)/" $SCRIPT_DIR/flake.nix
-sed -i "0,/Emmet/s//$(getent passwd $(whoami) | cut -d ':' -f 5 | cut -d ',' -f 1)/" $SCRIPT_DIR/flake.nix
-sed -i "s/emmet@librephoenix.com//" $SCRIPT_DIR/flake.nix
+sed -i "0,/eelco/s//$(whoami)/" $SCRIPT_DIR/flake.nix
+sed -i "0,/Eelco van Vliet/s//$(getent passwd $(whoami) | cut -d ':' -f 5 | cut -d ',' -f 1)/" $SCRIPT_DIR/flake.nix
+sed -i "s/eelcovv@gmail.com//" $SCRIPT_DIR/flake.nix
 sed -i "s+~/.dotfiles+$SCRIPT_DIR+g" $SCRIPT_DIR/flake.nix
 
 # Open up editor to manually edit flake.nix before install
