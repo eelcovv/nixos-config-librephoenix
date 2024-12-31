@@ -1,7 +1,7 @@
 { lib, stdenv, fetchFromGitLab, pkgs, ... }:
 
 let name = "pokemon-colorscripts";
-    version = "latest";
+    version = "unstable";
 in
   stdenv.mkDerivation {
     inherit name version;
