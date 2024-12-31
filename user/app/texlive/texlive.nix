@@ -2,5 +2,5 @@
 
 {
   home.packages = [ pkgs.texlive ];
-  programs.texlive.enable = true;
+  programs.texlive.enable = false;
 }
