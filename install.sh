@@ -25,13 +25,13 @@ fi
 
 # Patch flake.nix with different username/name and remove email by default
 sed -i "0,/eelco/s//$(whoami)/" $SCRIPT_DIR/flake.nix
-sed -i "0,/Eelco van Vliet/s//$(getent passwd $(whoami) | cut -d ':' -f 5 | cut -d ',' -f 1)/" $SCRIPT_DIR/flake.nix
+sed -i "0,/Eelco/s//$(getent passwd $(whoami) | cut -d ':' -f 5 | cut -d ',' -f 1)/" $SCRIPT_DIR/flake.nix
 sed -i "s/eelcovv@gmail.com//" $SCRIPT_DIR/flake.nix
 sed -i "s+~/.dotfiles+$SCRIPT_DIR+g" $SCRIPT_DIR/flake.nix
 
 # Open up editor to manually edit flake.nix before install
 if [ -z "$EDITOR" ]; then
-    EDITOR=nano;
+    EDITOR=vim;
 fi
 $EDITOR $SCRIPT_DIR/flake.nix;
 
