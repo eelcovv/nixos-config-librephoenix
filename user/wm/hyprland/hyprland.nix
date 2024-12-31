@@ -437,7 +437,7 @@ in
         };
      })
     )
-    gnome.zenity
+    zenity
     wlr-randr
     wtype
     ydotool
