@@ -20,7 +20,7 @@
       # ----- USER SETTINGS ----- #
       userSettings = rec {
         username = "eelco"; # username
-        name = "Eelco van Vliet"; # name/identifier
+        name = "Eelco"; # name/identifier
         email = "eelcovv@gmail.com"; # email (used for certain configurations)
         dotfilesDir = "/home/eelco/.dotfiles"; # absolute path of the local repo
         theme = "ashes"; # selcted theme from my themes directory (./themes/)
