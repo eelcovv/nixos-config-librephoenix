@@ -195,7 +195,7 @@
     # Various dev packages
     remmina
     sshfs
-    texinfo
+    #texinfo
     libffi zlib
     nodePackages.ungit
     ventoy
