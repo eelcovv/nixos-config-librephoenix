@@ -68,7 +68,7 @@
 
       # configure pkgs
       # use nixpkgs if running a server (homelab or worklab profile)
-      # otherwise use patched nixos-unstable nixpkgs
+      # otherwise use patched nixos-latest nixpkgs
       pkgs = (if ((systemSettings.profile == "homelab") || (systemSettings.profile == "worklab"))
               then
                 pkgs-stable
@@ -90,7 +90,7 @@
         };
       };
 
-      pkgs-unstable = import inputs.nixpkgs-patched {
+      pkgs-latest = import inputs.nixpkgs-patched {
         system = systemSettings.system;
         config = {
           allowUnfree = true;
@@ -113,7 +113,7 @@
 
       # configure lib
       # use nixpkgs if running a server (homelab or worklab profile)
-      # otherwise use patched nixos-unstable nixpkgs
+      # otherwise use patched nixos-latest nixpkgs
       lib = (if ((systemSettings.profile == "homelab") || (systemSettings.profile == "worklab"))
              then
                inputs.nixpkgs-stable.lib
@@ -121,12 +121,12 @@
                inputs.nixpkgs.lib);
 
       # use home-manager-stable if running a server (homelab or worklab profile)
-      # otherwise use home-manager-unstable
+      # otherwise use home-manager-latest
       home-manager = (if ((systemSettings.profile == "homelab") || (systemSettings.profile == "worklab"))
              then
                inputs.home-manager-stable
              else
-               inputs.home-manager-unstable);
+               inputs.home-manager-latest);
 
       # Systems that can run tests:
       supportedSystems = [ "aarch64-linux" "i686-linux" "x86_64-linux" ];
@@ -216,14 +216,14 @@
       url = "https://git.lix.systems/lix-project/nixos-module/archive/2.90.0.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/nixos-latest";
     nixpkgs-stable.url = "nixpkgs/nixos-24.05";
     emacs-pin-nixpkgs.url = "nixpkgs/f72123158996b8d4449de481897d855bc47c7bf6";
     kdenlive-pin-nixpkgs.url = "nixpkgs/cfec6d9203a461d9d698d8a60ef003cac6d0da94";
     nwg-dock-hyprland-pin-nixpkgs.url = "nixpkgs/2098d845d76f8a21ae4fe12ed7c7df49098d3f15";
 
-    home-manager-unstable.url = "github:nix-community/home-manager/master";
-    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager-latest.url = "github:nix-community/home-manager/master";
+    home-manager-latest.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager-stable.url = "github:nix-community/home-manager/release-24.05";
     home-manager-stable.inputs.nixpkgs.follows = "nixpkgs-stable";
@@ -231,7 +231,7 @@
     nix-on-droid = {
       url = "github:nix-community/nix-on-droid/master";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager-unstable";
+      inputs.home-manager.follows = "home-manager-latest";
     };
 
     hyprland = {
