@@ -15,7 +15,12 @@
         grubDevice = ""; # device identifier for grub; only used for legacy (bios) boot mode
         # gpuType = "amd"; # amd, intel or nvidia; only makes some slight mods for amd at the moment
         gpuType = "nvidia"; # amd, intel or nvidia; only makes some slight mods for amd at the moment
+        stable_nix_profiles = ["homelab"  "worklab"];
       };
+
+      lib_stable = inputs.nixpkgs-stable.lib;
+      lib_unstable = inputs.nixpkgs.lib;
+      use_nix_stable = lib_stable.any (s: s == systemSettings.profile) systemSettings.stable_nix_profiles;
 
       # ----- USER SETTINGS ----- #
       userSettings = rec {
@@ -69,7 +74,7 @@
       # configure pkgs
       # use nixpkgs if running a server (homelab or worklab profile)
       # otherwise use patched nixos-unstable nixpkgs
-      pkgs = (if ((systemSettings.profile == "homelab") || (systemSettings.profile == "worklab"))
+      pkgs = (if (use_nix_stable)
               then
                 pkgs-stable
               else
@@ -114,15 +119,16 @@
       # configure lib
       # use nixpkgs if running a server (homelab or worklab profile)
       # otherwise use patched nixos-unstable nixpkgs
-      lib = (if ((systemSettings.profile == "homelab") || (systemSettings.profile == "worklab"))
+      lib = (if (use_nix_stable)
              then
-               inputs.nixpkgs-stable.lib
+               lib_stable
              else
-               inputs.nixpkgs.lib);
+               lib_unstable
+            );
 
       # use home-manager-stable if running a server (homelab or worklab profile)
       # otherwise use home-manager-unstable
-      home-manager = (if ((systemSettings.profile == "homelab") || (systemSettings.profile == "worklab"))
+      home-manager = (if (use_nix_stable)
              then
                inputs.home-manager-stable
              else
