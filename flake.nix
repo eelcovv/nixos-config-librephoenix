@@ -18,9 +18,6 @@
         stable_nix_profiles = ["homelab"  "worklab"  "personal"  "work"];
       };
 
-      lib_stable = inputs.nixpkgs-stable.lib;
-      lib_unstable = inputs.nixpkgs.lib;
-      use_nix_stable = lib_stable.any (s: s == systemSettings.profile) systemSettings.stable_nix_profiles;
 
       # ----- USER SETTINGS ----- #
       userSettings = rec {
@@ -61,6 +58,11 @@
                            editor));
       };
 
+      lib-stable = inputs.nixpkgs-stable.lib;
+      lib-unstable = inputs.nixpkgs.lib;
+      #use_nix_stable = lib_stable.any (s: s == systemSettings.profile) systemSettings.stable_nix_profiles;
+      use_nix_stable = false;
+
       # create patched nixpkgs
       nixpkgs-patched =
         (import inputs.nixpkgs { system = systemSettings.system; rocmSupport = (if systemSettings.gpu == "amd" then true else false); }).applyPatches {
@@ -70,22 +72,6 @@
                       #./patches/nixpkgs-348697.patch
                     ];
         };
-
-      # configure pkgs
-      # use nixpkgs if running a server (homelab or worklab profile)
-      # otherwise use patched nixos-unstable nixpkgs
-      pkgs = (if (use_nix_stable)
-              then
-                pkgs-stable
-              else
-                (import nixpkgs-patched {
-                  system = systemSettings.system;
-                  config = {
-                    allowUnfree = true;
-                    allowUnfreePredicate = (_: true);
-                  };
-                  overlays = [ inputs.rust-overlay.overlays.default ];
-                }));
 
       pkgs-stable = import inputs.nixpkgs-stable {
         system = systemSettings.system;
@@ -104,6 +90,16 @@
         overlays = [ inputs.rust-overlay.overlays.default ];
       };
 
+      # configure pkgs
+      # use nixpkgs if running a server (homelab or worklab profile)
+      # otherwise use patched nixos-unstable nixpkgs
+      pkgs = (if (use_nix_stable)
+              then
+                pkgs-stable
+              else
+                pkgs-unstable
+             );
+
       pkgs-emacs = import inputs.emacs-pin-nixpkgs {
         system = systemSettings.system;
       };
@@ -121,9 +117,9 @@
       # otherwise use patched nixos-unstable nixpkgs
       lib = (if (use_nix_stable)
              then
-               lib_stable
+               lib-stable
              else
-               lib_unstable
+               lib-unstable
             );
 
       # use home-manager-stable if running a server (homelab or worklab profile)
