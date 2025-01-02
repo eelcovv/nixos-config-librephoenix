@@ -9,7 +9,7 @@ if [ $# -gt 0 ]
   else
     SCRIPT_DIR=~/.dotfiles
 fi
-nix-shell -p git --command "git clone git@github.com:eelcovv/nixos-config.git $SCRIPT_DIR"
+nix-shell -p git --command "git clone git@github.com:eelcovv/nixos-config-librephoenix.git $SCRIPT_DIR"
 
 # Generate hardware config for new system
 sudo nixos-generate-config --show-hardware-config > $SCRIPT_DIR/system/hardware-configuration.nix
@@ -25,7 +25,7 @@ fi
 
 # Patch flake.nix with different username/name and remove email by default
 sed -i "0,/eelco/s//$(whoami)/" $SCRIPT_DIR/flake.nix
-sed -i "0,/Eelco/s//$(getent passwd $(whoami) | cut -d ':' -f 5 | cut -d ',' -f 1)/" $SCRIPT_DIR/flake.nix
+sed -i "s/Eelco.*\"/$(getent passwd $(whoami) | cut -d ':' -f 5 | cut -d ',' -f 1)\"/" $SCRIPT_DIR/flake.nix
 sed -i "s/eelcovv@gmail.com/eelcovv@gmail.com/" $SCRIPT_DIR/flake.nix
 sed -i "s+~/.dotfiles+$SCRIPT_DIR+g" $SCRIPT_DIR/flake.nix
 
