@@ -8,5 +8,22 @@
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
+  services.xserver.desktopManager.plasma5.enable = true;
 
+  environment.plasma5.excludePackages = with pkgs.libsForQt5; [
+    oxygen
+  ];
+
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    oxygen
+  ];
+
+  #Gnome
+  environment.pathsToLink = ["/libexec"];
+  services.xserver.desktopManager.gnome.enable = true;
+
+  #cinnamon
+  services.xserver.desktopManager.cinnamon.enable = true;
+
+  # Hastag #icantdecidewhatmyfavouriteDEis :)
 }
