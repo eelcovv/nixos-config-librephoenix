@@ -1,5 +1,5 @@
 {
-  description = "Flake of Eelco";
+  description = "Flake of Eelco van Vliet";
 
   outputs = inputs@{ self, ... }:
     let
@@ -20,7 +20,7 @@
       # ----- USER SETTINGS ----- #
       userSettings = rec {
         username = "eelco"; # username
-        name = "Eelco"; # name/identifier
+        name = "Eelco van Vliet"; # name/identifier
         email = "eelcovv@gmail.com"; # email (used for certain configurations)
         dotfilesDir = "/home/eelco/.dotfiles"; # absolute path of the local repo
         theme = "ashes"; # selcted theme from my themes directory (./themes/)
