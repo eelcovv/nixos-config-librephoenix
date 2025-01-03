@@ -79,15 +79,15 @@
         system = systemSettings.system;
         config = {
           allowUnfree = true;
-          allowUnfreePredicate = (_: true);
+          allowUnfreePredicate = _: true;
         };
       };
 
-      pkgs-unstable = import inputs.nixpkgs-patched {
+      pkgs-unstable = import nixpkgs-patched {
         system = systemSettings.system;
         config = {
           allowUnfree = true;
-          allowUnfreePredicate = (_: true);
+          allowUnfreePredicate = _: true;
         };
         overlays = [ inputs.rust-overlay.overlays.default ];
       };
