@@ -87,11 +87,43 @@
       "electron-27.3.11"
   ];
 
-  # wheel group gets trusted access to nix daemon
-  nix.settings.trusted-users = [ "@wheel" ];
 
   # I'm sorry Stallman-taichou
   nixpkgs.config.allowUnfree = true;
+
+    # Enable bin files to run
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = [
+    #IMPORTANT:
+    #put any missing dynamic libs for unpacking programs here,
+    #NOT in environment.systemPackages
+  ];
+
+  nix = {
+    settings = {
+      trusted-users = ["@wheel" "root"];
+      allowed-users = ["@wheel" "root"];
+
+      experimental-features = "nix-command flakes";
+      http-connections = 50;
+      warn-dirty = false;
+      log-lines = 50;
+
+      sandbox = "relaxed";
+      auto-optimise-store = true;
+    };
+    gc = {
+      automatic = true;
+      dates = "monthly";
+      options = "--delete-older-than 30d";
+    };
+    #for nixD
+
+    # flake-utils-plus
+    # generateRegistryFromInputs = true;
+    # generateNixPathFromInputs = true;
+    # linkInputs = true;
+  };
 
   # Kernel modules
   boot.kernelModules = [ "i2c-dev" "i2c-piix4" "cpufreq_powersave" ];
@@ -127,12 +159,12 @@
   users.users.${userSettings.username} = {
     isNormalUser = true;
     description = userSettings.name;
-    extraGroups = [ "networkmanager" "wheel" "input" "dialout" "video" "render" ];
+    extraGroups = [ "networkmanager" "wheel" "input" "dialout" "video" "render" "fuse" ];
     packages = [];
     uid = 1000;
   };
 
-  # System packages
+# System packages
   environment.systemPackages = with pkgs; [
     vim
     logseq
@@ -142,24 +174,47 @@
     cryptsetup
     home-manager
     wpa_supplicant
-    (pkgs.writeScriptBin "comma" ''
-      if [ "$#" = 0 ]; then
-        echo "usage: comma PKGNAME... [EXECUTABLE]";
-      elif [ "$#" = 1 ]; then
-        nix-shell -p $1 --run $1;
-      elif [ "$#" = 2 ]; then
-        nix-shell -p $1 --run $2;
-      else
-        echo "error: too many arguments";
-        echo "usage: comma PKGNAME... [EXECUTABLE]";
-      fi
-    '')
-  ];
+    sshfs
+    openssh
+    fuse
 
-  # I use zsh btw
-  environment.shells = with pkgs; [ zsh ];
-  users.defaultUserShell = pkgs.zsh;
-  programs.zsh.enable = true;
+    #NIX/NIXOS ecosystem
+    nil
+    nixfmt-rfc-style
+    nix-index
+    nix-prefetch-git
+    nix-melt
+    nix-ld
+    nix-output-monitor
+    nvd
+    nvdtools
+    nh # Nix helper
+
+    flake-checker # Flake health checker
+    autoflake #Tool to remove unused imports and unused variables
+    deploy-rs
+    fh
+
+    # Nix Utils
+    nix-index
+    #nix-init #TODO: figure out why this takes over an hour to compile
+    nix-melt
+    nix-update
+    nixpkgs-fmt
+    nixpkgs-hammering
+    nixpkgs-review
+    nurl
+    nil # Nix LSP
+    tokei
+
+    # NIX CODE FORMATTERS
+    nixfmt-rfc-style # my favourite - new official style for nixpkgs
+    nixpkgs-fmt # ugly but current official style for nixpkgs
+    alejandra # fast and reliable, readable style
+
+    nixd # BETTER NIX LSP
+
+  ];
 
   fonts.fontDir.enable = true;
 
@@ -174,4 +229,79 @@
   # It is ok to leave this unchanged for compatibility purposes
   system.stateVersion = "22.11";
 
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+    pinentryPackage = pkgs.pinentry-curses;
+  };
+
+  services = {
+    libinput.enable = true; # Enable touchpad support
+    #TODO: play with tailscale
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "both";
+    };
+    flatpak.enable = true;
+    usbmuxd.enable = true;
+    deluge = {
+      enable = true;
+      # declarative = true;
+    };
+
+    openssh = {
+      enable = true;
+
+      settings = {
+        PasswordAuthentication = true;
+        PermitRootLogin = "no";
+        # Enable SFTP subsystem
+        Subsystem = "sftp internal-sftp";
+      };
+
+      # Consider changing this if you need SSH access from other machines
+      listenAddresses = [
+        {
+          addr = "127.0.0.1";
+          port = 22;
+        }
+        {
+          addr = "::1";
+          port = 22;
+        }
+      ];
+    };
+  };
+
+  environment.etc."ssh/ssh_config".text = ''
+    Host remote
+      HostName remote
+      User rudra
+      Port 22
+      ForwardX11 yes
+      IdentityFile ~/.ssh/id_ed25519
+      ServerAliveInterval 60
+      ServerAliveCountMax 3
+      Compression yes
+  '';
+
+  systemd.services.NetworkManager-wait-online.enable = false;
+
+  # XFCE desktop manager (for Thunar preferences)
+  services.xserver.desktopManager.xfce = {
+    enable = true;
+  };
+
+  # Enable X11 forwarding
+  services.xserver.enable = true;
+
+  # Allow users in the "fuse" group to use FUSE
+  users.groups.fuse = {};
+
+  #Enable Sudo [REPLACED BY DOAS]
+  # security.sudo.enable = true;
+  # security.sudo.wheelNeedsPassword = false;
 }
