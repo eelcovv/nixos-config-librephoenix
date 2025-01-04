@@ -66,7 +66,10 @@
 
       # create patched nixpkgs
       nixpkgs-patched =
-        (import inputs.nixpkgs { system = systemSettings.system; rocmSupport = (if systemSettings.gpu == "amd" then true else false); }).applyPatches {
+        (import inputs.nixpkgs { 
+          system = systemSettings.system; 
+          rocmSupport = (if systemSettings.gpu == "amd" then true else false); 
+        }).applyPatches {
           name = "nixpkgs-patched";
           src = inputs.nixpkgs;
           patches = [
@@ -145,6 +148,9 @@
     in
     {
       homeConfigurations = {
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.backupFileExtension = "backup";
         user = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
@@ -195,7 +201,8 @@
       };
 
       packages = forAllSystems (system:
-        let pkgs = nixpkgsFor.${system};
+        let 
+          pkgs = nixpkgsFor.${system};
         in {
           default = self.packages.${system}.install;
 
