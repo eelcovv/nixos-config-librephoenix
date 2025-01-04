@@ -6,32 +6,36 @@
 {
   imports =
     [ ../../system/hardware-configuration.nix
-      ../../system/hardware/systemd.nix # systemd config
-      ../../system/hardware/kernel.nix # Kernel config
-      ../../system/hardware/power.nix # Power management
-      ../../system/hardware/time.nix # Network time sync
-      ../../system/hardware/opengl.nix
-      ../../system/hardware/printing.nix
-      ../../system/hardware/bluetooth.nix
-      (./. + "../../../system/wm"+("/"+userSettings.wm)+".nix") # My window manager
-      #../../system/app/flatpak.nix
-      ../../system/app/virtualization.nix
-      ( import ../../system/app/docker.nix {storageDriver = null; inherit pkgs userSettings lib;} )
-      ../../system/security/doas.nix
-      ../../system/security/gpg.nix
-      ../../system/security/blocklist.nix
-      ../../system/security/firewall.nix
-      ../../system/security/firejail.nix
-      ../../system/security/openvpn.nix
-      ../../system/security/automount.nix
-      ../../system/style/stylix.nix
+      # ../../system/hardware/systemd.nix # systemd config
+      # ../../system/hardware/kernel.nix # Kernel config
+      # ../../system/hardware/power.nix # Power management
+      # ../../system/hardware/time.nix # Network time sync
+      # ../../system/hardware/opengl.nix
+      # ../../system/hardware/printing.nix
+      # ../../system/hardware/bluetooth.nix
+      # (./. + "../../../system/wm"+("/"+userSettings.wm)+".nix") # My window manager
+      # #../../system/app/flatpak.nix
+      # ../../system/app/virtualization.nix
+      # ( import ../../system/app/docker.nix {storageDriver = null; inherit pkgs userSettings lib;} )
+      # ../../system/security/doas.nix
+      # ../../system/security/gpg.nix
+      # ../../system/security/blocklist.nix
+      # ../../system/security/firewall.nix
+      # ../../system/security/firejail.nix
+      # ../../system/security/openvpn.nix
+      # ../../system/security/automount.nix
+      # ../../system/style/stylix.nix
     ];
 
   # Fix nix path
-  nix.nixPath = [ "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
-                  "nixos-config=$HOME/dotfiles/system/configuration.nix"
-                  "/nix/var/nix/profiles/per-user/root/channels"
-                ];
+  # nix.nixPath = [ "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
+  #                 "nixos-config=$HOME/dotfiles/system/configuration.nix"
+  #                 "/nix/var/nix/profiles/per-user/root/channels"
+  #               ];
+
+   # TODO: check for a solution for this. I copied this from /etc/nixos/configuration.nix,
+   # but is should be loaded from here I think.
+   boot.initrd.luks.devices."luks-0bb5b2e7-2d53-43eb-92a4-80d50e74876f".device = "/dev/disk/by-uuid/0bb5b2e7-2d53-43eb-92a4-80d50e74876f";
 
   # Ensure nix flakes are enabled
   nix.extraOptions = ''
@@ -65,65 +69,65 @@
     };
   };
 
-  nixpkgs.overlays = [
-    (
-      final: prev: {
-        logseq = prev.logseq.overrideAttrs (oldAttrs: {
-          postFixup = ''
-            makeWrapper ${prev.electron_27}/bin/electron $out/bin/${oldAttrs.pname} \
-              --set "LOCAL_GIT_DIRECTORY" ${prev.git} \
-              --add-flags $out/share/${oldAttrs.pname}/resources/app \
-              --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}" \
-              --prefix LD_LIBRARY_PATH : "${prev.lib.makeLibraryPath [ prev.stdenv.cc.cc.lib ]}"
-          '';
-        });
-      }
-    )
-  ];
+  # nixpkgs.overlays = [
+  #   (
+  #     final: prev: {
+  #       logseq = prev.logseq.overrideAttrs (oldAttrs: {
+  #         postFixup = ''
+  #           makeWrapper ${prev.electron_27}/bin/electron $out/bin/${oldAttrs.pname} \
+  #             --set "LOCAL_GIT_DIRECTORY" ${prev.git} \
+  #             --add-flags $out/share/${oldAttrs.pname}/resources/app \
+  #             --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}" \
+  #             --prefix LD_LIBRARY_PATH : "${prev.lib.makeLibraryPath [ prev.stdenv.cc.cc.lib ]}"
+  #         '';
+  #       });
+  #     }
+  #   )
+  # ];
  
 
-  # logseq
-  nixpkgs.config.permittedInsecurePackages = [
-      "electron-27.3.11"
-  ];
+  # # logseq
+  # nixpkgs.config.permittedInsecurePackages = [
+  #     "electron-27.3.11"
+  # ];
 
 
   # I'm sorry Stallman-taichou
   nixpkgs.config.allowUnfree = true;
 
     # Enable bin files to run
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = [
+  #programs.nix-ld.enable = true;
+  #programs.nix-ld.libraries = [
     #IMPORTANT:
     #put any missing dynamic libs for unpacking programs here,
     #NOT in environment.systemPackages
-  ];
+  #];
 
-  nix = {
-    settings = {
-      trusted-users = ["@wheel" "root"];
-      allowed-users = ["@wheel" "root"];
+  # nix = {
+  #   settings = {
+  #     trusted-users = ["@wheel" "root"];
+  #     allowed-users = ["@wheel" "root"];
 
-      experimental-features = "nix-command flakes";
-      http-connections = 50;
-      warn-dirty = false;
-      log-lines = 50;
+  #     experimental-features = "nix-command flakes";
+  #     http-connections = 50;
+  #     warn-dirty = false;
+  #     log-lines = 50;
 
-      sandbox = "relaxed";
-      auto-optimise-store = true;
-    };
-    gc = {
-      automatic = true;
-      dates = "monthly";
-      options = "--delete-older-than 30d";
-    };
+  #     sandbox = "relaxed";
+  #     auto-optimise-store = true;
+  #   };
+  #   gc = {
+  #     automatic = true;
+  #     dates = "monthly";
+  #     options = "--delete-older-than 30d";
+  #   };
     #for nixD
 
     # flake-utils-plus
     # generateRegistryFromInputs = true;
     # generateNixPathFromInputs = true;
     # linkInputs = true;
-  };
+ # };
 
   # Kernel modules
   boot.kernelModules = [ "i2c-dev" "i2c-piix4" "cpufreq_powersave" ];
@@ -167,9 +171,7 @@
 # System packages
   environment.systemPackages = with pkgs; [
     vim
-    logseq
     wget
-    zsh
     git
     cryptsetup
     home-manager
@@ -177,43 +179,6 @@
     sshfs
     openssh
     fuse
-
-    #NIX/NIXOS ecosystem
-    nil
-    nixfmt-rfc-style
-    nix-index
-    nix-prefetch-git
-    nix-melt
-    nix-ld
-    nix-output-monitor
-    nvd
-    nvdtools
-    nh # Nix helper
-
-    flake-checker # Flake health checker
-    autoflake #Tool to remove unused imports and unused variables
-    deploy-rs
-    fh
-
-    # Nix Utils
-    nix-index
-    #nix-init #TODO: figure out why this takes over an hour to compile
-    nix-melt
-    nix-update
-    nixpkgs-fmt
-    nixpkgs-hammering
-    nixpkgs-review
-    nurl
-    nil # Nix LSP
-    tokei
-
-    # NIX CODE FORMATTERS
-    nixfmt-rfc-style # my favourite - new official style for nixpkgs
-    nixpkgs-fmt # ugly but current official style for nixpkgs
-    alejandra # fast and reliable, readable style
-
-    nixd # BETTER NIX LSP
-
   ];
 
   fonts.fontDir.enable = true;

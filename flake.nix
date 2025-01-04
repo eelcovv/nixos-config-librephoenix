@@ -9,7 +9,7 @@
         hostname = "snowball"; # hostname
         profile = "base"; # select a profile defined from my profiles directory
         timezone = "Europe/Amsterdam"; # select timezone
-        locale = "en_US.UTF-8"; # select locale
+        locale = "nl_NL.UTF-8"; # select locale
         bootMode = "uefi"; # uefi or bios
         bootMountPath = "/boot"; # mount path for efi boot partition; only used for uefi boot mode
         grubDevice = ""; # device identifier for grub; only used for legacy (bios) boot mode
