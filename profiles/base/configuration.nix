@@ -43,31 +43,31 @@
   '';
 
   # add to ensure different sessions on login
-  environment = {
-    sessionVariables = {
-      XDG_CACHE_HOME = "$HOME/.cache";
-      XDG_CONFIG_HOME = "$HOME/.config";
-      XDG_DATA_HOME = "$HOME/.local/share";
-      XDG_BIN_HOME = "$HOME/.local/bin";
-      XDG_DESKTOP_DIR = "$HOME/Desktop";
-    };
+  # environment = {
+  #   sessionVariables = {
+  #     XDG_CACHE_HOME = "$HOME/.cache";
+  #     XDG_CONFIG_HOME = "$HOME/.config";
+  #     XDG_DATA_HOME = "$HOME/.local/share";
+  #     XDG_BIN_HOME = "$HOME/.local/bin";
+  #     XDG_DESKTOP_DIR = "$HOME/Desktop";
+  #   };
 
-    variables = {
-      # Make some programs "XDG" compliant.
-      LESSHISTFILE = "$XDG_CACHE_HOME/less.history";
-      WGETRC = "$XDG_CONFIG_HOME/wgetrc";
-      XDG_TERMINAL = "alacritty";
-      # Enable icons in tooling since we have nerdfonts.
-      LOG_ICONS = "true";
-    };
+  #   variables = {
+  #     # Make some programs "XDG" compliant.
+  #     LESSHISTFILE = "$XDG_CACHE_HOME/less.history";
+  #     WGETRC = "$XDG_CONFIG_HOME/wgetrc";
+  #     XDG_TERMINAL = "alacritty";
+  #     # Enable icons in tooling since we have nerdfonts.
+  #     LOG_ICONS = "true";
+  #   };
 
-    shellAliases = {
-      ".." = "cd ..";
-      neofetch = "nitch";
-      ls = "eza -la --icons --no-user --no-time --git -s type";
-      cat = "bat";
-    };
-  };
+  #   shellAliases = {
+  #     ".." = "cd ..";
+  #     neofetch = "nitch";
+  #     ls = "eza -la --icons --no-user --no-time --git -s type";
+  #     cat = "bat";
+  #   };
+  # };
 
   # nixpkgs.overlays = [
   #   (
@@ -136,9 +136,9 @@
   # Use systemd-boot if uefi, default to grub otherwise
   boot.loader.systemd-boot.enable = if (systemSettings.bootMode == "uefi") then true else false;
   boot.loader.efi.canTouchEfiVariables = if (systemSettings.bootMode == "uefi") then true else false;
-  boot.loader.efi.efiSysMountPoint = systemSettings.bootMountPath; # does nothing if running bios rather than uefi
-  boot.loader.grub.enable = if (systemSettings.bootMode == "uefi") then false else true;
-  boot.loader.grub.device = systemSettings.grubDevice; # does nothing if running uefi rather than bios
+  # boot.loader.efi.efiSysMountPoint = systemSettings.bootMountPath; # does nothing if running bios rather than uefi
+  # boot.loader.grub.enable = if (systemSettings.bootMode == "uefi") then false else true;
+  # boot.loader.grub.device = systemSettings.grubDevice; # does nothing if running uefi rather than bios
 
   # Networking
   networking.hostName = systemSettings.hostname; # Define your hostname.
@@ -169,17 +169,17 @@
   };
 
 # System packages
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    git
-    cryptsetup
-    home-manager
-    wpa_supplicant
-    sshfs
-    openssh
-    fuse
-  ];
+  # environment.systemPackages = with pkgs; [
+  #   vim
+  #   wget
+  #   git
+  #   cryptsetup
+  #   home-manager
+  #   wpa_supplicant
+  #   sshfs
+  #   openssh
+  #   fuse
+  # ];
 
   fonts.fontDir.enable = true;
 
@@ -197,61 +197,61 @@
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-    pinentryPackage = pkgs.pinentry-curses;
-  };
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  #   pinentryPackage = pkgs.pinentry-curses;
+  # };
 
-  services = {
-    libinput.enable = true; # Enable touchpad support
-    #TODO: play with tailscale
-    tailscale = {
-      enable = true;
-      useRoutingFeatures = "both";
-    };
-    flatpak.enable = true;
-    usbmuxd.enable = true;
-    deluge = {
-      enable = true;
-      # declarative = true;
-    };
+  # services = {
+  #   libinput.enable = true; # Enable touchpad support
+  #   #TODO: play with tailscale
+  #   tailscale = {
+  #     enable = true;
+  #     useRoutingFeatures = "both";
+  #   };
+  #   flatpak.enable = true;
+  #   usbmuxd.enable = true;
+  #   deluge = {
+  #     enable = true;
+  #     # declarative = true;
+  #   };
 
-    openssh = {
-      enable = true;
+  #   openssh = {
+  #     enable = true;
 
-      settings = {
-        PasswordAuthentication = true;
-        PermitRootLogin = "no";
-        # Enable SFTP subsystem
-        Subsystem = "sftp internal-sftp";
-      };
+  #     settings = {
+  #       PasswordAuthentication = true;
+  #       PermitRootLogin = "no";
+  #       # Enable SFTP subsystem
+  #       Subsystem = "sftp internal-sftp";
+  #     };
 
-      # Consider changing this if you need SSH access from other machines
-      listenAddresses = [
-        {
-          addr = "127.0.0.1";
-          port = 22;
-        }
-        {
-          addr = "::1";
-          port = 22;
-        }
-      ];
-    };
-  };
+  #     # Consider changing this if you need SSH access from other machines
+  #     listenAddresses = [
+  #       {
+  #         addr = "127.0.0.1";
+  #         port = 22;
+  #       }
+  #       {
+  #         addr = "::1";
+  #         port = 22;
+  #       }
+  #     ];
+  #   };
+  # };
 
-  environment.etc."ssh/ssh_config".text = ''
-    Host remote
-      HostName remote
-      User rudra
-      Port 22
-      ForwardX11 yes
-      IdentityFile ~/.ssh/id_ed25519
-      ServerAliveInterval 60
-      ServerAliveCountMax 3
-      Compression yes
-  '';
+  # environment.etc."ssh/ssh_config".text = ''
+  #   Host remote
+  #     HostName remote
+  #     User rudra
+  #     Port 22
+  #     ForwardX11 yes
+  #     IdentityFile ~/.ssh/id_ed25519
+  #     ServerAliveInterval 60
+  #     ServerAliveCountMax 3
+  #     Compression yes
+  # '';
 
   systemd.services.NetworkManager-wait-online.enable = false;
 

@@ -147,34 +147,34 @@
 
     in
     {
-      homeConfigurations = {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.backupFileExtension = "backup";
-        user = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            (./. + "/profiles" + ("/" + systemSettings.profile) + "/home.nix") # load home.nix from selected PROFILE
-          ];
-          extraSpecialArgs = {
-            # pass config variables from above
-            inherit pkgs-stable;
-            inherit pkgs-emacs;
-            inherit pkgs-kdenlive;
-            inherit pkgs-nwg-dock-hyprland;
-            inherit systemSettings;
-            inherit userSettings;
-            inherit inputs;
-          };
-        };
-      };
+      # homeConfigurations = {
+      #   home-manager.useGlobalPkgs = true;
+      #   home-manager.useUserPackages = true;
+      #   home-manager.backupFileExtension = "backup";
+      #   user = home-manager.lib.homeManagerConfiguration {
+      #     inherit pkgs;
+      #     modules = [
+      #       (./. + "/profiles" + ("/" + systemSettings.profile) + "/home.nix") # load home.nix from selected PROFILE
+      #     ];
+      #     extraSpecialArgs = {
+      #       # pass config variables from above
+      #       inherit pkgs-stable;
+      #       inherit pkgs-emacs;
+      #       inherit pkgs-kdenlive;
+      #       inherit pkgs-nwg-dock-hyprland;
+      #       inherit systemSettings;
+      #       inherit userSettings;
+      #       inherit inputs;
+      #     };
+      #   };
+      # };
       nixosConfigurations = {
         system = lib.nixosSystem {
           system = systemSettings.system;
           modules = [
             (./. + "/profiles" + ("/" + systemSettings.profile) + "/configuration.nix")
-            inputs.lix-module.nixosModules.default
-            ./system/bin/phoenix.nix
+            # inputs.lix-module.nixosModules.default
+            # ./system/bin/phoenix.nix
           ]; # load configuration.nix from selected PROFILE
           specialArgs = {
             # pass config variables from above
@@ -185,42 +185,42 @@
           };
         };
       };
-      nixOnDroidConfigurations = {
-        inherit pkgs;
-        default = inputs.nix-on-droid.lib.nixOnDroidConfiguration {
-          modules = [ ./profiles/nix-on-droid/configuration.nix ];
-        };
-        extraSpecialArgs = {
-          # pass config variables from above
-          inherit pkgs-stable;
-          inherit pkgs-emacs;
-          inherit systemSettings;
-          inherit userSettings;
-          inherit inputs;
-        };
-      };
+      # nixOnDroidConfigurations = {
+      #   inherit pkgs;
+      #   default = inputs.nix-on-droid.lib.nixOnDroidConfiguration {
+      #     modules = [ ./profiles/nix-on-droid/configuration.nix ];
+      #   };
+      #   extraSpecialArgs = {
+      #     # pass config variables from above
+      #     inherit pkgs-stable;
+      #     inherit pkgs-emacs;
+      #     inherit systemSettings;
+      #     inherit userSettings;
+      #     inherit inputs;
+      #   };
+      # };
 
-      packages = forAllSystems (system:
-        let 
-          pkgs = nixpkgsFor.${system};
-        in {
-          default = self.packages.${system}.install;
+      # packages = forAllSystems (system:
+      #   let 
+      #     pkgs = nixpkgsFor.${system};
+      #   in {
+      #     default = self.packages.${system}.install;
 
-          install = pkgs.writeShellApplication {
-            name = "install";
-            runtimeInputs = with pkgs; [ git ]; # I could make this fancier by adding other deps
-            text = ''${./install.sh} "$@"'';
-          };
-        });
+      #     install = pkgs.writeShellApplication {
+      #       name = "install";
+      #       runtimeInputs = with pkgs; [ git ]; # I could make this fancier by adding other deps
+      #       text = ''${./install.sh} "$@"'';
+      #     };
+      #   });
 
-      apps = forAllSystems (system: {
-        default = self.apps.${system}.install;
+      # apps = forAllSystems (system: {
+      #   default = self.apps.${system}.install;
 
-        install = {
-          type = "app";
-          program = "${self.packages.${system}.install}/bin/install";
-        };
-      });
+      #   install = {
+      #     type = "app";
+      #     program = "${self.packages.${system}.install}/bin/install";
+      #   };
+      # });
     };
 
   inputs = {
@@ -229,7 +229,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "nixpkgs/nixos-24.05";
+    nixpkgs-stable.url = "nixpkgs/nixos-24.11";
     emacs-pin-nixpkgs.url = "nixpkgs/f72123158996b8d4449de481897d855bc47c7bf6";
     kdenlive-pin-nixpkgs.url = "nixpkgs/cfec6d9203a461d9d698d8a60ef003cac6d0da94";
     nwg-dock-hyprland-pin-nixpkgs.url = "nixpkgs/2098d845d76f8a21ae4fe12ed7c7df49098d3f15";
@@ -237,7 +237,7 @@
     home-manager-unstable.url = "github:nix-community/home-manager/master";
     home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs";
 
-    home-manager-stable.url = "github:nix-community/home-manager/release-24.05";
+    home-manager-stable.url = "github:nix-community/home-manager/release-24.11";
     home-manager-stable.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     nix-on-droid = {
