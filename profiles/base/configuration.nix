@@ -121,12 +121,6 @@
       dates = "monthly";
       options = "--delete-older-than 30d";
     };
-    for nixD
-
-    flake-utils-plus
-    generateRegistryFromInputs = true;
-    generateNixPathFromInputs = true;
-    linkInputs = true;
  };
 
   # Kernel modules
