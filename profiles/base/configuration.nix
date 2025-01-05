@@ -261,6 +261,6 @@
   users.groups.fuse = {};
 
   #Enable Sudo [REPLACED BY DOAS]
-  security.sudo.enable = true;
-  security.sudo.wheelNeedsPassword = false;
+  # security.sudo.enable = true;
+  # security.sudo.wheelNeedsPassword = false;
 }
