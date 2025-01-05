@@ -98,9 +98,9 @@
     # Enable bin files to run
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = [
-    IMPORTANT:
-    put any missing dynamic libs for unpacking programs here,
-    NOT in environment.systemPackages
+    # IMPORTANT:
+    # put any missing dynamic libs for unpacking programs here,
+    # NOT in environment.systemPackages
   ];
 
   nix = {
