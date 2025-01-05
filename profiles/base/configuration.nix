@@ -6,36 +6,36 @@
 {
   imports =
     [ ../../system/hardware-configuration.nix
-      # ../../system/hardware/systemd.nix # systemd config
-      # ../../system/hardware/kernel.nix # Kernel config
-      # ../../system/hardware/power.nix # Power management
-      # ../../system/hardware/time.nix # Network time sync
-      # ../../system/hardware/opengl.nix
-      # ../../system/hardware/printing.nix
-      # ../../system/hardware/bluetooth.nix
-      # (./. + "../../../system/wm"+("/"+userSettings.wm)+".nix") # My window manager
-      # #../../system/app/flatpak.nix
-      # ../../system/app/virtualization.nix
-      # ( import ../../system/app/docker.nix {storageDriver = null; inherit pkgs userSettings lib;} )
-      # ../../system/security/doas.nix
-      # ../../system/security/gpg.nix
-      # ../../system/security/blocklist.nix
-      # ../../system/security/firewall.nix
-      # ../../system/security/firejail.nix
-      # ../../system/security/openvpn.nix
-      # ../../system/security/automount.nix
-      # ../../system/style/stylix.nix
+      ../../system/hardware/systemd.nix # systemd config
+      ../../system/hardware/kernel.nix # Kernel config
+      ../../system/hardware/power.nix # Power management
+      ../../system/hardware/time.nix # Network time sync
+      ../../system/hardware/opengl.nix
+      ../../system/hardware/printing.nix
+      ../../system/hardware/bluetooth.nix
+      (./. + "../../../system/wm"+("/"+userSettings.wm)+".nix") # My window manager
+      #../../system/app/flatpak.nix
+      ../../system/app/virtualization.nix
+      ( import ../../system/app/docker.nix {storageDriver = null; inherit pkgs userSettings lib;} )
+      ../../system/security/doas.nix
+      ../../system/security/gpg.nix
+      ../../system/security/blocklist.nix
+      ../../system/security/firewall.nix
+      ../../system/security/firejail.nix
+      ../../system/security/openvpn.nix
+      ../../system/security/automount.nix
+      ../../system/style/stylix.nix
     ];
 
   # Fix nix path
-  # nix.nixPath = [ "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
-  #                 "nixos-config=$HOME/dotfiles/system/configuration.nix"
-  #                 "/nix/var/nix/profiles/per-user/root/channels"
-  #               ];
+  nix.nixPath = [ "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
+                  "nixos-config=$HOME/dotfiles/system/configuration.nix"
+                  "/nix/var/nix/profiles/per-user/root/channels"
+                ];
 
    # TODO: check for a solution for this. I copied this from /etc/nixos/configuration.nix,
    # but is should be loaded from here I think.
-   boot.initrd.luks.devices."luks-0bb5b2e7-2d53-43eb-92a4-80d50e74876f".device = "/dev/disk/by-uuid/0bb5b2e7-2d53-43eb-92a4-80d50e74876f";
+   # boot.initrd.luks.devices."luks-0bb5b2e7-2d53-43eb-92a4-80d50e74876f".device = "/dev/disk/by-uuid/0bb5b2e7-2d53-43eb-92a4-80d50e74876f";
 
   # Ensure nix flakes are enabled
   nix.extraOptions = ''
@@ -43,31 +43,31 @@
   '';
 
   # add to ensure different sessions on login
-  # environment = {
-  #   sessionVariables = {
-  #     XDG_CACHE_HOME = "$HOME/.cache";
-  #     XDG_CONFIG_HOME = "$HOME/.config";
-  #     XDG_DATA_HOME = "$HOME/.local/share";
-  #     XDG_BIN_HOME = "$HOME/.local/bin";
-  #     XDG_DESKTOP_DIR = "$HOME/Desktop";
-  #   };
+  environment = {
+    sessionVariables = {
+      XDG_CACHE_HOME = "$HOME/.cache";
+      XDG_CONFIG_HOME = "$HOME/.config";
+      XDG_DATA_HOME = "$HOME/.local/share";
+      XDG_BIN_HOME = "$HOME/.local/bin";
+      XDG_DESKTOP_DIR = "$HOME/Desktop";
+    };
 
-  #   variables = {
-  #     # Make some programs "XDG" compliant.
-  #     LESSHISTFILE = "$XDG_CACHE_HOME/less.history";
-  #     WGETRC = "$XDG_CONFIG_HOME/wgetrc";
-  #     XDG_TERMINAL = "alacritty";
-  #     # Enable icons in tooling since we have nerdfonts.
-  #     LOG_ICONS = "true";
-  #   };
+    variables = {
+      # Make some programs "XDG" compliant.
+      LESSHISTFILE = "$XDG_CACHE_HOME/less.history";
+      WGETRC = "$XDG_CONFIG_HOME/wgetrc";
+      XDG_TERMINAL = "alacritty";
+      # Enable icons in tooling since we have nerdfonts.
+      LOG_ICONS = "true";
+    };
 
-  #   shellAliases = {
-  #     ".." = "cd ..";
-  #     neofetch = "nitch";
-  #     ls = "eza -la --icons --no-user --no-time --git -s type";
-  #     cat = "bat";
-  #   };
-  # };
+    shellAliases = {
+      ".." = "cd ..";
+      neofetch = "nitch";
+      ls = "eza -la --icons --no-user --no-time --git -s type";
+      cat = "bat";
+    };
+  };
 
   # nixpkgs.overlays = [
   #   (
@@ -96,38 +96,38 @@
   nixpkgs.config.allowUnfree = true;
 
     # Enable bin files to run
-  #programs.nix-ld.enable = true;
-  #programs.nix-ld.libraries = [
-    #IMPORTANT:
-    #put any missing dynamic libs for unpacking programs here,
-    #NOT in environment.systemPackages
-  #];
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = [
+    IMPORTANT:
+    put any missing dynamic libs for unpacking programs here,
+    NOT in environment.systemPackages
+  ];
 
-  # nix = {
-  #   settings = {
-  #     trusted-users = ["@wheel" "root"];
-  #     allowed-users = ["@wheel" "root"];
+  nix = {
+    settings = {
+      trusted-users = ["@wheel" "root"];
+      allowed-users = ["@wheel" "root"];
 
-  #     experimental-features = "nix-command flakes";
-  #     http-connections = 50;
-  #     warn-dirty = false;
-  #     log-lines = 50;
+      experimental-features = "nix-command flakes";
+      http-connections = 50;
+      warn-dirty = false;
+      log-lines = 50;
 
-  #     sandbox = "relaxed";
-  #     auto-optimise-store = true;
-  #   };
-  #   gc = {
-  #     automatic = true;
-  #     dates = "monthly";
-  #     options = "--delete-older-than 30d";
-  #   };
-    #for nixD
+      sandbox = "relaxed";
+      auto-optimise-store = true;
+    };
+    gc = {
+      automatic = true;
+      dates = "monthly";
+      options = "--delete-older-than 30d";
+    };
+    for nixD
 
-    # flake-utils-plus
-    # generateRegistryFromInputs = true;
-    # generateNixPathFromInputs = true;
-    # linkInputs = true;
- # };
+    flake-utils-plus
+    generateRegistryFromInputs = true;
+    generateNixPathFromInputs = true;
+    linkInputs = true;
+ };
 
   # Kernel modules
   boot.kernelModules = [ "i2c-dev" "i2c-piix4" "cpufreq_powersave" ];
@@ -136,9 +136,9 @@
   # Use systemd-boot if uefi, default to grub otherwise
   boot.loader.systemd-boot.enable = if (systemSettings.bootMode == "uefi") then true else false;
   boot.loader.efi.canTouchEfiVariables = if (systemSettings.bootMode == "uefi") then true else false;
-  # boot.loader.efi.efiSysMountPoint = systemSettings.bootMountPath; # does nothing if running bios rather than uefi
-  # boot.loader.grub.enable = if (systemSettings.bootMode == "uefi") then false else true;
-  # boot.loader.grub.device = systemSettings.grubDevice; # does nothing if running uefi rather than bios
+  boot.loader.efi.efiSysMountPoint = systemSettings.bootMountPath; # does nothing if running bios rather than uefi
+  boot.loader.grub.enable = if (systemSettings.bootMode == "uefi") then false else true;
+  boot.loader.grub.device = systemSettings.grubDevice; # does nothing if running uefi rather than bios
 
   # Networking
   networking.hostName = systemSettings.hostname; # Define your hostname.
@@ -169,17 +169,17 @@
   };
 
 # System packages
-  # environment.systemPackages = with pkgs; [
-  #   vim
-  #   wget
-  #   git
-  #   cryptsetup
-  #   home-manager
-  #   wpa_supplicant
-  #   sshfs
-  #   openssh
-  #   fuse
-  # ];
+  environment.systemPackages = with pkgs; [
+    vim
+    wget
+    git
+    cryptsetup
+    home-manager
+    wpa_supplicant
+    sshfs
+    openssh
+    fuse
+  ];
 
   fonts.fontDir.enable = true;
 
@@ -196,62 +196,62 @@
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  #   pinentryPackage = pkgs.pinentry-curses;
-  # };
+  programs.mtr.enable = true;
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+    pinentryPackage = pkgs.pinentry-curses;
+  };
 
-  # services = {
-  #   libinput.enable = true; # Enable touchpad support
-  #   #TODO: play with tailscale
-  #   tailscale = {
-  #     enable = true;
-  #     useRoutingFeatures = "both";
-  #   };
-  #   flatpak.enable = true;
-  #   usbmuxd.enable = true;
-  #   deluge = {
-  #     enable = true;
-  #     # declarative = true;
-  #   };
+  services = {
+    libinput.enable = true; # Enable touchpad support
+    #TODO: play with tailscale
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "both";
+    };
+    flatpak.enable = true;
+    usbmuxd.enable = true;
+    deluge = {
+      enable = true;
+      # declarative = true;
+    };
 
-  #   openssh = {
-  #     enable = true;
+    openssh = {
+      enable = true;
 
-  #     settings = {
-  #       PasswordAuthentication = true;
-  #       PermitRootLogin = "no";
-  #       # Enable SFTP subsystem
-  #       Subsystem = "sftp internal-sftp";
-  #     };
+      settings = {
+        PasswordAuthentication = true;
+        PermitRootLogin = "no";
+        # Enable SFTP subsystem
+        Subsystem = "sftp internal-sftp";
+      };
 
-  #     # Consider changing this if you need SSH access from other machines
-  #     listenAddresses = [
-  #       {
-  #         addr = "127.0.0.1";
-  #         port = 22;
-  #       }
-  #       {
-  #         addr = "::1";
-  #         port = 22;
-  #       }
-  #     ];
-  #   };
-  # };
+      # Consider changing this if you need SSH access from other machines
+      listenAddresses = [
+        {
+          addr = "127.0.0.1";
+          port = 22;
+        }
+        {
+          addr = "::1";
+          port = 22;
+        }
+      ];
+    };
+  };
 
-  # environment.etc."ssh/ssh_config".text = ''
-  #   Host remote
-  #     HostName remote
-  #     User rudra
-  #     Port 22
-  #     ForwardX11 yes
-  #     IdentityFile ~/.ssh/id_ed25519
-  #     ServerAliveInterval 60
-  #     ServerAliveCountMax 3
-  #     Compression yes
-  # '';
+  environment.etc."ssh/ssh_config".text = ''
+    Host remote
+      HostName remote
+      User rudra
+      Port 22
+      ForwardX11 yes
+      IdentityFile ~/.ssh/id_ed25519
+      ServerAliveInterval 60
+      ServerAliveCountMax 3
+      Compression yes
+  '';
 
   systemd.services.NetworkManager-wait-online.enable = false;
 
@@ -267,6 +267,6 @@
   users.groups.fuse = {};
 
   #Enable Sudo [REPLACED BY DOAS]
-  # security.sudo.enable = true;
-  # security.sudo.wheelNeedsPassword = false;
+  security.sudo.enable = true;
+  security.sudo.wheelNeedsPassword = false;
 }
